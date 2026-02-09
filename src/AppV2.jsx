@@ -323,7 +323,7 @@ function CursorOverlay({ state }) {
         <motion.div
             initial={{ top: '110%', left: '90%', scale: 1, opacity: 0 }}
             animate={{
-                top: isMoving ? '72%' : '80%', // 80% is waiting, 72% is button
+                top: isMoving ? '60%' : '80%', // 60% fits the "Chat" button better
                 left: isMoving ? '50%' : '80%',
                 scale: isClicked ? 0.9 : 1,
                 opacity: state === 'hidden' ? 0 : 1
