@@ -546,19 +546,30 @@ function Page1({ companyName, setCompanyName, onNext }) {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }} className="space-y-8 max-w-lg">
             <div className="h-6"></div>
             <div className="space-y-6">
-                <h1 className="text-5xl font-bold text-[#000000] leading-[1.15] tracking-tight">Autonomous Agents for <span className="text-[#BD2949]">RCS</span> Messaging.</h1>
-                <p className="text-lg text-[#666666] leading-relaxed">Scale support and sales without increasing headcount. Deploy GenAI agents that resolve complex queries on RCS.</p>
+                <h1 className="text-5xl font-bold text-[#000000] leading-[1.15] tracking-tight">Make Messages your smartest channel</h1>
+                <p className="text-lg text-[#666666] leading-relaxed">Send interactive RCS messages. Let an AI agent handle replies and move customers to the next step.</p>
             </div>
             <div className="space-y-4 pt-2">
                 <label className="block">
-                    <span className="text-sm font-semibold text-[#000000] mb-2 block">Company Name</span>
-                    <input type="text" placeholder="e.g SpaceX" className="w-full px-4 py-3.5 rounded-lg border border-[#DDDDDD] text-base text-[#000000] placeholder:text-[#999999] focus:border-[#BD2949] focus:outline-none focus:ring-2 focus:ring-[#BD2949]/20 transition-all bg-white shadow-sm" value={companyName} onChange={(e) => setCompanyName(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && companyName.trim() && onNext()} autoFocus />
+                    <span className="text-sm font-semibold text-[#000000] mb-2 block">Brand name</span>
+                    <input
+                        type="text"
+                        placeholder="Your brand"
+                        className="w-full p-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#BD2949]/20 focus:border-[#BD2949] transition-all shadow-sm text-base text-[#000000] placeholder:text-[#999999] focus:outline-none"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && companyName.trim() && onNext()}
+                        autoFocus
+                    />
                 </label>
-                <button onClick={onNext} disabled={!companyName.trim()} className="w-full py-4 bg-[#BD2949] text-white rounded-lg font-semibold text-base hover:bg-[#A02340] disabled:bg-[#F1F3F4] disabled:text-[#999999] disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 disabled:hover:translate-y-0 disabled:shadow-none">
-                    See your brand live <ArrowRight className="w-5 h-5" />
-                </button>
+                <div>
+                    <button onClick={onNext} disabled={!companyName.trim()} className="w-full py-4 bg-[#BD2949] text-white rounded-lg font-semibold text-base hover:bg-[#A02340] disabled:bg-[#F1F3F4] disabled:text-[#999999] disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 disabled:hover:translate-y-0 disabled:shadow-none">
+                        Watch the agent work <ArrowRight className="w-5 h-5" />
+                    </button>
+                    <p className="text-xs text-gray-400 text-center mt-3">Instant preview. No signup.</p>
+                </div>
             </div>
-            <p className="text-xs text-[#666666]">By submitting, you agree to Engati's Terms of Use. <a href="https://www.engati.ai/termsofuse" className="text-[#BD2949] hover:underline ml-1 font-medium" target="_blank" rel="noreferrer">View terms</a></p>
+            <p className="text-xs text-[#666666]">By submitting, you agree to Engati’s Terms of Use. <a href="https://www.engati.ai/termsofuse" className="text-[#BD2949] hover:underline ml-1 font-medium" target="_blank" rel="noreferrer">View terms</a></p>
         </motion.div>
     );
 }
@@ -622,38 +633,65 @@ function Page2({ companyName, onBack, onSubmit }) {
     return (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.4 }} className="space-y-6 max-w-lg">
             <button onClick={onBack} className="flex items-center gap-2 text-[#666666] hover:text-[#000000] transition-colors group">
-                <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" /> <span className="text-sm font-medium">Back to edit name</span>
+                <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" /> <span className="text-sm font-medium">Back to edit brand</span>
             </button>
             <div className="space-y-2">
-                <h2 className="text-4xl font-bold text-[#000000] leading-tight tracking-tight">Get your custom <span className="text-[#BD2949]">RCS</span> audit</h2>
-                <p className="text-base text-[#666666] leading-relaxed">See how <span className="font-semibold text-[#000000]">{companyName}</span> can increase engagement.</p>
+                <h2 className="text-4xl font-bold text-[#000000] leading-tight tracking-tight">Get your live demo</h2>
+                <p className="text-base text-[#666666] leading-relaxed">See Engati handle replies, capture intent, and hand off to your team when needed.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                    <div><label className="text-sm font-medium text-[#000000] mb-1.5 block">Full Name</label><input type="text" placeholder="Adam" className="w-full px-4 py-3 rounded-lg border border-[#DDDDDD] text-[#000000] focus:border-[#BD2949] focus:outline-none focus:ring-2 focus:ring-[#BD2949]/20 transition-all font-medium" value={form.fullName} onChange={e => setForm({ ...form, fullName: e.target.value })} /></div>
-                    <div><label className="text-sm font-medium text-[#000000] mb-1.5 block">Work Email</label><input type="email" placeholder="adam@work.com" className="w-full px-4 py-3 rounded-lg border border-[#DDDDDD] text-[#000000] focus:border-[#BD2949] focus:outline-none focus:ring-2 focus:ring-[#BD2949]/20 transition-all font-medium" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} /></div>
+                    <div>
+                        <label className="text-sm font-medium text-[#000000] mb-1.5 block">Full name</label>
+                        <input
+                            type="text"
+                            placeholder="Full name"
+                            className="w-full p-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#BD2949]/20 focus:border-[#BD2949] transition-all shadow-sm focus:outline-none font-medium text-[#000000]"
+                            value={form.fullName}
+                            onChange={e => setForm({ ...form, fullName: e.target.value })}
+                        />
+                    </div>
+                    <div>
+                        <label className="text-sm font-medium text-[#000000] mb-1.5 block">Work email</label>
+                        <input
+                            type="email"
+                            placeholder="Work email"
+                            className="w-full p-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#BD2949]/20 focus:border-[#BD2949] transition-all shadow-sm focus:outline-none font-medium text-[#000000]"
+                            value={form.email}
+                            onChange={e => setForm({ ...form, email: e.target.value })}
+                        />
+                    </div>
                 </div>
 
-                <div><label className="text-sm font-medium text-[#000000] mb-1.5 block">Phone Number</label><input type="tel" placeholder="+91..." className="w-full px-4 py-3 rounded-lg border border-[#DDDDDD] text-[#000000] focus:border-[#BD2949] focus:outline-none focus:ring-2 focus:ring-[#BD2949]/20 transition-all font-medium" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} /></div>
+                <div>
+                    <label className="text-sm font-medium text-[#000000] mb-1.5 block">Phone number</label>
+                    <input
+                        type="tel"
+                        placeholder="Phone number"
+                        className="w-full p-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#BD2949]/20 focus:border-[#BD2949] transition-all shadow-sm focus:outline-none font-medium text-[#000000]"
+                        value={form.phone}
+                        onChange={e => setForm({ ...form, phone: e.target.value })}
+                    />
+                </div>
 
-                {/* CUSTOM SELECT: REVENUE */}
+                {/* CUSTOM SELECT: COMPANY SIZE */}
                 <CustomSelect
-                    label="Annual Revenue"
+                    label="Company size"
                     value={form.revenue}
-                    options={["< 10 Cr", "10 Cr - 50 Cr", "50 Cr - 100 Cr", "100 Cr - 500 Cr", "500 Cr+"]}
+                    options={["1-10 employees", "11-50 employees", "51-200 employees", "201-500 employees", "500+ employees"]}
                     onChange={(val) => setForm({ ...form, revenue: val })}
                 />
 
-                {/* SCHEDULING GRID - NATIVE PICKERS - FIXED OVERLAYS */}
+                {/* SCHEDULING GRID */}
                 <div>
-                    <label className="text-sm font-medium text-[#000000] mb-1.5 block">Schedule Audit</label>
+                    <label className="text-sm font-medium text-[#000000] mb-1.5 block">Choose a demo slot</label>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="relative group">
-                            <div className="w-full px-4 py-3 rounded-lg border border-[#DDDDDD] bg-white text-left flex items-center gap-3 text-[#000000] group-hover:border-[#BD2949] transition-colors overflow-hidden pointer-events-none">
+                            <div className="w-full p-4 bg-white border border-gray-200 rounded-xl text-left flex items-center gap-3 text-[#000000] group-hover:border-[#BD2949] transition-colors overflow-hidden pointer-events-none shadow-sm">
                                 <Calendar className="w-5 h-5 text-[#BD2949] flex-shrink-0" />
-                                <span className={`text-sm font-medium truncate ${form.date ? 'text-black' : 'text-[#666666]'}`}>
-                                    {form.date ? new Date(form.date).toLocaleDateString() : 'Select Date'}
+                                <span className={`text-sm font-medium truncate ${form.date ? 'text-black' : 'text-[#999999]'}`}>
+                                    {form.date ? new Date(form.date).toLocaleDateString() : 'Select date'}
                                 </span>
                             </div>
                             <input
@@ -672,10 +710,10 @@ function Page2({ companyName, onBack, onSubmit }) {
                             />
                         </div>
                         <div className="relative group">
-                            <div className="w-full px-4 py-3 rounded-lg border border-[#DDDDDD] bg-white text-left flex items-center gap-3 text-[#000000] group-hover:border-[#BD2949] transition-colors overflow-hidden pointer-events-none">
+                            <div className="w-full p-4 bg-white border border-gray-200 rounded-xl text-left flex items-center gap-3 text-[#000000] group-hover:border-[#BD2949] transition-colors overflow-hidden pointer-events-none shadow-sm">
                                 <Clock className="w-5 h-5 text-[#BD2949] flex-shrink-0" />
-                                <span className={`text-sm font-medium truncate ${form.time ? 'text-black' : 'text-[#666666]'}`}>
-                                    {form.time || 'Select Time'}
+                                <span className={`text-sm font-medium truncate ${form.time ? 'text-black' : 'text-[#999999]'}`}>
+                                    {form.time || 'Select time'}
                                 </span>
                             </div>
                             <input
@@ -696,20 +734,23 @@ function Page2({ companyName, onBack, onSubmit }) {
                     </div>
                 </div>
 
-                <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-4 bg-[#BD2949] text-white rounded-lg font-bold text-base hover:bg-[#A02340] disabled:bg-[#F1F3F4] disabled:text-[#999999] disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5 mt-4"
-                >
-                    {isSubmitting ? (
-                        <>
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                            Processing Request...
-                        </>
-                    ) : (
-                        "Request Custom Audit"
-                    )}
-                </button>
+                <div>
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full py-4 bg-[#BD2949] text-white rounded-lg font-bold text-base hover:bg-[#A02340] disabled:bg-[#F1F3F4] disabled:text-[#999999] disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5 mt-4"
+                    >
+                        {isSubmitting ? (
+                            <>
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                                Processing Request...
+                            </>
+                        ) : (
+                            "Book live demo"
+                        )}
+                    </button>
+                    <p className="text-xs text-gray-400 text-center mt-3">We’ll email the invite right away.</p>
+                </div>
             </form>
         </motion.div >
     );
@@ -720,8 +761,8 @@ function Page3({ companyName, onReset }) {
     return (
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-8 text-center py-12">
             <div className="flex justify-center"><motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: 'spring' }} className="w-24 h-24 rounded-full bg-[#E8F5E9] flex items-center justify-center"><CheckCircle2 className="w-12 h-12 text-[#34A853]" /></motion.div></div>
-            <div className="space-y-4"><h2 className="text-4xl font-bold text-[#000000] tracking-tight">Audit Request Received!</h2><p className="text-lg text-[#666666] max-w-md mx-auto leading-relaxed">We've sent a confirmation for <span className="font-semibold text-[#000000]">{companyName}</span>.</p></div>
-            <div className="pt-4"><button onClick={onReset} className="text-[#BD2949] font-semibold hover:underline text-base">Start a new preview</button></div>
+            <div className="space-y-4"><h2 className="text-4xl font-bold text-[#000000] tracking-tight">You’re booked</h2><p className="text-lg text-[#666666] max-w-md mx-auto leading-relaxed">Invite sent for <span className="font-semibold text-[#000000]">{companyName}</span>. Check your inbox for the details.</p></div>
+            <div className="pt-4"><button onClick={() => window.location.reload()} className="text-[#BD2949] font-semibold hover:underline text-base">Preview another brand</button></div>
         </motion.div>
     );
 }
@@ -759,7 +800,7 @@ function CustomSelect({ label, value, options, onChange }) {
             <label className="text-sm font-medium text-[#000000] mb-1.5 block">{label}</label>
             <div
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-full px-4 py-3 rounded-lg border ${isOpen ? 'border-[#BD2949] ring-2 ring-[#BD2949]/20' : 'border-[#DDDDDD]'} bg-white text-[#000000] flex items-center justify-between cursor-pointer transition-all shadow-sm hover:border-[#BD2949]`}
+                className={`w-full p-4 rounded-xl border ${isOpen ? 'border-[#BD2949] ring-2 ring-[#BD2949]/20' : 'border-gray-200'} bg-white text-[#000000] flex items-center justify-between cursor-pointer transition-all shadow-sm hover:border-[#BD2949]`}
             >
                 <span className={`font-medium ${value ? 'text-black' : 'text-[#999999]'}`}>{value || `Select ${label}`}</span>
                 <ChevronDown className={`w-5 h-5 text-[#666666] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
