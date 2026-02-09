@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand Colors */
+  --engati-red: #BD2949;
+  --engati-red-hover: #A02340;
+
+  /* Backgrounds */
+  --page-bg: #F8F9FA;
+  --surface-white: #FFFFFF;
+  --surface-gray: #F5F7FA;
+
+  /* Text Colors */
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+
+  /* Input Styles */
+  --input-border: #DDDDDD;
+  --input-focus: #BD2949;
+
+  /* Google Search UI Colors (CRITICAL) */
+  --google-search-bg: #F8F9FA;
+  --google-link-blue: #1A73E8;
+  --google-url-gray: #5F6368;
+  --google-desc-gray: #4D5156;
+  --google-divider: #DADCE0;
+
+  /* RCS Chat Colors */
+  --rcs-button-bg: #FFFFFF;
+  --rcs-button-border: #DADCE0;
+  --rcs-icon-blue: #1A73E8;
+  --rcs-message-bg: #FFFFFF;
+
+  /* Success State */
+  --success-green: #34A853;
+  --success-green-bg: #E8F5E9;
+
+  /* Phone Device */
+  --phone-chassis: #1F1F1F;
+}
+
+@layer base {
+  body {
+    background-color: var(--page-bg);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
