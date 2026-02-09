@@ -416,6 +416,30 @@ function RCSChatScene({ companyName, brandData }) {
     const brandName = companyName || 'Your Brand';
     const brandInitial = brandName[0]?.toUpperCase() || 'Y';
 
+    const [showUserMessage, setShowUserMessage] = useState(false);
+    const [showTyping, setShowTyping] = useState(false);
+    const [showBotMessage, setShowBotMessage] = useState(false);
+
+    useEffect(() => {
+        // Reset and start sequence
+        setShowUserMessage(false);
+        setShowTyping(false);
+        setShowBotMessage(false);
+
+        const t1 = setTimeout(() => setShowUserMessage(true), 400);
+        const t2 = setTimeout(() => setShowTyping(true), 1000);
+        const t3 = setTimeout(() => {
+            setShowTyping(false);
+            setShowBotMessage(true);
+        }, 2200);
+
+        return () => {
+            clearTimeout(t1);
+            clearTimeout(t2);
+            clearTimeout(t3);
+        };
+    }, []);
+
     return (
         <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }} className="h-full bg-[#F5F7FA] flex flex-col">
             <div className="bg-white border-b border-[#DADCE0] px-4 py-2.5 flex items-center gap-3 flex-shrink-0 shadow-sm z-10">
@@ -428,19 +452,85 @@ function RCSChatScene({ companyName, brandData }) {
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-5 bg-[#FFFFFF] pb-20">
                 <div className="flex justify-center"><span className="text-[10px] font-medium text-[#5F6368] bg-[#F1F3F4] px-3 py-1 rounded-full">Today</span></div>
-                <div className="flex gap-2.5 items-end group">
-                    <div className="w-8 h-8 rounded-full bg-white border border-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm p-0.5">
-                        {brandData.logo ? <img src={brandData.logo} alt="av" className="w-full h-full object-contain" /> : <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs">{brandInitial}</div>}
-                    </div>
-                    <div className="bg-[#F1F3F4] rounded-2xl rounded-bl-sm p-3 max-w-[78%]"><p className="text-sm text-[#202124] leading-relaxed">Hi there! 👋 Welcome to {brandName}. How can we help you today?</p><span className="text-[10px] text-[#5F6368] mt-1 block opacity-70">Read • 9:42 AM</span></div>
-                </div>
-                <div className="flex gap-2.5">
-                    <div className="w-8 h-8 flex-shrink-0" />
-                    <div className="bg-white border border-[#DADCE0] rounded-2xl shadow-sm overflow-hidden max-w-[85%]">
-                        <div className="aspect-video bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center"><Sparkles className="w-10 h-10 text-purple-400" /></div>
-                        <div className="p-4 space-y-3"><div><h4 className="font-semibold text-[#202124] text-sm mb-1">Special {brandData.industry} Offer 🎉</h4><p className="text-xs text-[#5F6368] leading-relaxed">{brandData.offer}</p></div><div className="flex gap-2 pt-1"><button className="flex-1 bg-[#F1F3F4] text-[#1A73E8] rounded-full py-2 px-3 text-xs font-medium hover:bg-[#E8F0FE] transition-colors">Claim</button><button className="flex-1 border border-[#DADCE0] text-[#1A73E8] rounded-full py-2 px-3 text-xs font-medium hover:bg-[#F8F9FA] transition-colors">Details</button></div></div>
-                    </div>
-                </div>
+
+                <AnimatePresence>
+                    {showUserMessage && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            className="flex justify-end group"
+                        >
+                            <div className="bg-[#1A73E8] text-white px-4 py-2.5 rounded-2xl rounded-br-sm text-sm shadow-sm max-w-[80%]">
+                                <p className="leading-relaxed">Hi, I'm interested in learning more about {brandName}.</p>
+                                <span className="text-[10px] text-white/70 mt-1 block">Sent • 9:42 AM</span>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                    {showTyping && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            className="flex gap-2.5 items-start"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-white border border-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm p-0.5">
+                                {brandData.logo ? <img src={brandData.logo} alt="av" className="w-full h-full object-contain" /> : <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs">{brandInitial}</div>}
+                            </div>
+                            <div className="bg-[#F1F3F4] px-4 py-3 rounded-2xl rounded-bl-sm flex gap-1.5 items-center">
+                                <div className="w-1.5 h-1.5 bg-[#5F6368] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                <div className="w-1.5 h-1.5 bg-[#5F6368] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                <div className="w-1.5 h-1.5 bg-[#5F6368] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                    {showBotMessage && (
+                        <>
+                            <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                className="flex gap-2.5 items-end group"
+                            >
+                                <div className="w-8 h-8 rounded-full bg-white border border-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm p-0.5">
+                                    {brandData.logo ? <img src={brandData.logo} alt="av" className="w-full h-full object-contain" /> : <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs">{brandInitial}</div>}
+                                </div>
+                                <div className="bg-[#F1F3F4] rounded-2xl rounded-bl-sm p-3 max-w-[78%]">
+                                    <p className="text-sm text-[#202124] leading-relaxed">Hi there! 👋 Welcome to {brandName}. How can we help you today?</p>
+                                    <span className="text-[10px] text-[#5F6368] mt-1 block opacity-70">Read • 9:42 AM</span>
+                                </div>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                transition={{ delay: 0.3 }}
+                                className="flex gap-2.5"
+                            >
+                                <div className="w-8 h-8 flex-shrink-0" />
+                                <div className="bg-white border border-[#DADCE0] rounded-2xl shadow-sm overflow-hidden max-w-[85%]">
+                                    <div className="aspect-video bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center">
+                                        <Sparkles className="w-10 h-10 text-purple-400" />
+                                    </div>
+                                    <div className="p-4 space-y-3">
+                                        <div>
+                                            <h4 className="font-semibold text-[#202124] text-sm mb-1">Special {brandData.industry} Offer 🎉</h4>
+                                            <p className="text-xs text-[#5F6368] leading-relaxed">{brandData.offer}</p>
+                                        </div>
+                                        <div className="flex gap-2 pt-1">
+                                            <button className="flex-1 bg-[#F1F3F4] text-[#1A73E8] rounded-full py-2 px-3 text-xs font-medium hover:bg-[#E8F0FE] transition-colors">Claim</button>
+                                            <button className="flex-1 border border-[#DADCE0] text-[#1A73E8] rounded-full py-2 px-3 text-xs font-medium hover:bg-[#F8F9FA] transition-colors">Details</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>
             </div>
             <div className="bg-white border-t border-[#DADCE0] p-3 flex items-center gap-2 flex-shrink-0 pb-6">
                 <button className="p-2 hover:bg-gray-100 rounded-full transition-colors bg-[#F1F3F4]"><Plus className="w-5 h-5 text-[#444746]" /></button><div className="flex-1 bg-[#F1F3F4] rounded-full px-4 py-2.5 text-sm text-[#5F6368] cursor-text">Type a message...</div><button className="p-2 hover:bg-gray-100 rounded-full transition-colors"><Mic className="w-5 h-5 text-[#444746]" /></button>
