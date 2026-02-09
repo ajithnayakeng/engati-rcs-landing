@@ -675,11 +675,11 @@ function Page2({ companyName, onBack, onSubmit }) {
                     />
                 </div>
 
-                {/* CUSTOM SELECT: COMPANY SIZE */}
+                {/* CUSTOM SELECT: Annual Revenue */}
                 <CustomSelect
-                    label="Company size"
+                    label="Annual Revenue"
                     value={form.revenue}
-                    options={["1-10 employees", "11-50 employees", "51-200 employees", "201-500 employees", "500+ employees"]}
+                    options={["< 50 Cr", "50 Cr - 100 Cr", "100 Cr - 500 Cr", "> 500 Cr"]}
                     onChange={(val) => setForm({ ...form, revenue: val })}
                 />
 
