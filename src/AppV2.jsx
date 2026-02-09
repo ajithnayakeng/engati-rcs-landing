@@ -415,7 +415,7 @@ function Page1({ companyName, setCompanyName, onNext }) {
 
 // --- GOOGLE SHEETS BACKEND ---
 // FUTURE: Replace SCRIPT_URL with Salesforce Web-to-Lead endpoint
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7JxrZRuuXwpdNHtozxkvBnXWGeO7M-5i_TRaXJAIDN2FvEIllVodSXmIxIdj__NRW/exechttps://script.google.com/macros/s/AKfycbzQ..../exec"; // PLACEHOLDER: Paste your Web App URL here!
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7JxrZRuuXwpdNHtozxkvBnXWGeO7M-5i_TRaXJAIDN2FvEIllVodSXmIxIdj__NRW/exec";
 
 function Page2({ companyName, onBack, onSubmit }) {
     const [form, setForm] = useState({ fullName: '', email: '', phone: '', revenue: '', date: '', time: '' });
