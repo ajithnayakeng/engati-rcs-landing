@@ -546,15 +546,18 @@ function Page1({ companyName, setCompanyName, onNext }) {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }} className="space-y-8 max-w-lg">
             <div className="h-6"></div>
             <div className="space-y-6">
-                <h1 className="text-5xl font-bold text-[#000000] leading-[1.15] tracking-tight">Make Messages your smartest channel</h1>
-                <p className="text-lg text-[#666666] leading-relaxed">Send interactive RCS messages. Let an AI agent handle replies and move customers to the next step.</p>
+                <h1 className="text-5xl font-bold text-[#000000] leading-[1.15] tracking-tight">
+                    Accelerate your conversions through Google Search
+                    <span className="inline-block align-middle ml-3 px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold tracking-wide border border-blue-200">BETA</span>
+                </h1>
+                <p className="text-lg text-[#666666] leading-relaxed">Turn high intent Google Search moments into a conversation that qualifies, personalizes, and converts, one tap from search to chat through RCS.</p>
             </div>
             <div className="space-y-4 pt-2">
                 <label className="block">
-                    <span className="text-sm font-semibold text-[#000000] mb-2 block">Brand name</span>
+                    <span className="text-sm font-semibold text-[#000000] mb-2 block">Brand Name</span>
                     <input
                         type="text"
-                        placeholder="Your brand"
+                        placeholder="Enter your brand name"
                         className="w-full p-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#BD2949]/20 focus:border-[#BD2949] transition-all shadow-sm text-base text-[#000000] placeholder:text-[#999999] focus:outline-none"
                         value={companyName}
                         onChange={(e) => setCompanyName(e.target.value)}
@@ -633,30 +636,30 @@ function Page2({ companyName, onBack, onSubmit }) {
     return (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.4 }} className="space-y-6 max-w-lg">
             <button onClick={onBack} className="flex items-center gap-2 text-[#666666] hover:text-[#000000] transition-colors group">
-                <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" /> <span className="text-sm font-medium">Back to edit brand</span>
+                <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" /> <span className="text-sm font-medium">Back</span>
             </button>
             <div className="space-y-2">
-                <h2 className="text-4xl font-bold text-[#000000] leading-tight tracking-tight">Get your live demo</h2>
-                <p className="text-base text-[#666666] leading-relaxed">See Engati handle replies, capture intent, and hand off to your team when needed.</p>
+                <h2 className="text-4xl font-bold text-[#000000] leading-tight tracking-tight">Deploy it for your brand today!</h2>
+                <p className="text-base text-[#666666] leading-relaxed">Leave your details below and someone from Engati team will get in touch with you, at your preferred time.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="text-sm font-medium text-[#000000] mb-1.5 block">Full name</label>
+                        <label className="text-sm font-medium text-[#000000] mb-1.5 block">Full Name</label>
                         <input
                             type="text"
-                            placeholder="Full name"
+                            placeholder="Enter your name"
                             className="w-full p-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#BD2949]/20 focus:border-[#BD2949] transition-all shadow-sm focus:outline-none font-medium text-[#000000]"
                             value={form.fullName}
                             onChange={e => setForm({ ...form, fullName: e.target.value })}
                         />
                     </div>
                     <div>
-                        <label className="text-sm font-medium text-[#000000] mb-1.5 block">Work email</label>
+                        <label className="text-sm font-medium text-[#000000] mb-1.5 block">Work Email</label>
                         <input
                             type="email"
-                            placeholder="Work email"
+                            placeholder="Enter your work email ID"
                             className="w-full p-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#BD2949]/20 focus:border-[#BD2949] transition-all shadow-sm focus:outline-none font-medium text-[#000000]"
                             value={form.email}
                             onChange={e => setForm({ ...form, email: e.target.value })}
@@ -665,10 +668,10 @@ function Page2({ companyName, onBack, onSubmit }) {
                 </div>
 
                 <div>
-                    <label className="text-sm font-medium text-[#000000] mb-1.5 block">Phone number</label>
+                    <label className="text-sm font-medium text-[#000000] mb-1.5 block">Phone Number</label>
                     <input
                         type="tel"
-                        placeholder="Phone number"
+                        placeholder="Please enter your 10 digit mobile number"
                         className="w-full p-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#BD2949]/20 focus:border-[#BD2949] transition-all shadow-sm focus:outline-none font-medium text-[#000000]"
                         value={form.phone}
                         onChange={e => setForm({ ...form, phone: e.target.value })}
@@ -677,15 +680,16 @@ function Page2({ companyName, onBack, onSubmit }) {
 
                 {/* CUSTOM SELECT: Annual Revenue */}
                 <CustomSelect
-                    label="Annual Revenue"
+                    label="Annual Revenue (INR)"
                     value={form.revenue}
+                    placeholder="Approximate Annual Revenue"
                     options={["< 50 Cr", "50 Cr - 100 Cr", "100 Cr - 500 Cr", "> 500 Cr"]}
                     onChange={(val) => setForm({ ...form, revenue: val })}
                 />
 
                 {/* SCHEDULING GRID */}
                 <div>
-                    <label className="text-sm font-medium text-[#000000] mb-1.5 block">Choose a demo slot</label>
+                    <label className="text-sm font-medium text-[#000000] mb-1.5 block">Preferred time to connect</label>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="relative group">
                             <div className="w-full p-4 bg-white border border-gray-200 rounded-xl text-left flex items-center gap-3 text-[#000000] group-hover:border-[#BD2949] transition-colors overflow-hidden pointer-events-none shadow-sm">
@@ -713,7 +717,7 @@ function Page2({ companyName, onBack, onSubmit }) {
                             <div className="w-full p-4 bg-white border border-gray-200 rounded-xl text-left flex items-center gap-3 text-[#000000] group-hover:border-[#BD2949] transition-colors overflow-hidden pointer-events-none shadow-sm">
                                 <Clock className="w-5 h-5 text-[#BD2949] flex-shrink-0" />
                                 <span className={`text-sm font-medium truncate ${form.time ? 'text-black' : 'text-[#999999]'}`}>
-                                    {form.time || 'Select time'}
+                                    {form.time || 'Select your preferred time'}
                                 </span>
                             </div>
                             <input
@@ -746,10 +750,10 @@ function Page2({ companyName, onBack, onSubmit }) {
                                 Processing Request...
                             </>
                         ) : (
-                            "Book live demo"
+                            "Submit"
                         )}
                     </button>
-                    <p className="text-xs text-gray-400 text-center mt-3">We’ll email the invite right away.</p>
+                    <p className="text-xs text-gray-400 text-center mt-3">Someone from the team will get in touch with you</p>
                 </div>
             </form>
         </motion.div >
@@ -761,8 +765,8 @@ function Page3({ companyName, onReset }) {
     return (
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-8 text-center py-12">
             <div className="flex justify-center"><motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: 'spring' }} className="w-24 h-24 rounded-full bg-[#E8F5E9] flex items-center justify-center"><CheckCircle2 className="w-12 h-12 text-[#34A853]" /></motion.div></div>
-            <div className="space-y-4"><h2 className="text-4xl font-bold text-[#000000] tracking-tight">You’re booked</h2><p className="text-lg text-[#666666] max-w-md mx-auto leading-relaxed">Invite sent for <span className="font-semibold text-[#000000]">{companyName}</span>. Check your inbox for the details.</p></div>
-            <div className="pt-4"><button onClick={() => window.location.reload()} className="text-[#BD2949] font-semibold hover:underline text-base">Preview another brand</button></div>
+            <div className="space-y-4"><h2 className="text-4xl font-bold text-[#000000] tracking-tight">Submitted</h2><p className="text-lg text-[#666666] max-w-md mx-auto leading-relaxed">Someone from the team will get in touch with you. Check your inbox for the details.</p></div>
+            <div className="pt-4"><button onClick={() => window.location.reload()} className="text-[#BD2949] font-semibold hover:underline text-base">Resubmit the form</button></div>
         </motion.div>
     );
 }
@@ -783,7 +787,7 @@ function NavIcon({ icon, active }) {
 
 // --- HELPER COMPONENTS ---
 
-function CustomSelect({ label, value, options, onChange }) {
+function CustomSelect({ label, value, options, onChange, placeholder }) {
     const [isOpen, setIsOpen] = useState(false);
     const ref = useRef(null);
 
@@ -802,7 +806,7 @@ function CustomSelect({ label, value, options, onChange }) {
                 onClick={() => setIsOpen(!isOpen)}
                 className={`w-full p-4 rounded-xl border ${isOpen ? 'border-[#BD2949] ring-2 ring-[#BD2949]/20' : 'border-gray-200'} bg-white text-[#000000] flex items-center justify-between cursor-pointer transition-all shadow-sm hover:border-[#BD2949]`}
             >
-                <span className={`font-medium ${value ? 'text-black' : 'text-[#999999]'}`}>{value || `Select ${label}`}</span>
+                <span className={`font-medium ${value ? 'text-black' : 'text-[#999999]'}`}>{value || placeholder || `Select ${label}`}</span>
                 <ChevronDown className={`w-5 h-5 text-[#666666] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
             </div>
 
