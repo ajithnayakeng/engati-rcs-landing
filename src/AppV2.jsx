@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Search, Mic, Camera, MoreVertical, MessageCircle, ChevronRight,
@@ -218,7 +218,13 @@ const DynamicIsland = ({ active }) => (
 
 function PhoneStudio({ companyName, brandData }) {
     const [scene, setScene] = useState('google');
-    const [cursorState, setCursorState] = useState('hidden'); // 'hidden', 'waiting', 'moving', 'clicked'
+    const [cursorState, setCursorState] = useState('hidden'); // 'hidden', 'waiting', 'moving'
+
+    // Refs for Target Lock
+    const phoneContainerRef = useRef(null);
+    const chatButtonRef = useRef(null);
+    const [cursorTarget, setCursorTarget] = useState({ x: 0, y: 0 });
+    const [isClicking, setIsClicking] = useState(false);
 
     // Automation Sequence
     useEffect(() => {
@@ -234,23 +240,31 @@ function PhoneStudio({ companyName, brandData }) {
         }
 
         if (brandData.isLoaded && scene === 'google') {
-            let t1, t2, t3;
+            let t1, t2;
             // 1. Wait 2s
             t1 = setTimeout(() => {
                 setCursorState('waiting');
                 // 2. Move (To button)
                 t2 = setTimeout(() => {
                     setCursorState('moving');
-                    // 3. Click
-                    t3 = setTimeout(() => {
-                        setCursorState('clicked');
-                        setTimeout(() => setScene('rcs'), 300);
-                    }, 1200);
                 }, 100);
             }, 2000);
-            return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+            return () => { clearTimeout(t1); clearTimeout(t2); };
         }
     }, [brandData, companyName, scene]);
+
+    // Calculate Target Coordinates
+    useLayoutEffect(() => {
+        if (cursorState === 'moving' && chatButtonRef.current && phoneContainerRef.current) {
+            const btnRect = chatButtonRef.current.getBoundingClientRect();
+            const containerRect = phoneContainerRef.current.getBoundingClientRect();
+
+            setCursorTarget({
+                x: btnRect.left - containerRect.left + (btnRect.width / 2),
+                y: btnRect.top - containerRect.top + (btnRect.height / 2)
+            });
+        }
+    }, [cursorState]);
 
 
     return (
@@ -258,6 +272,7 @@ function PhoneStudio({ companyName, brandData }) {
 
             {/* Phone Chassis */}
             <motion.div
+                ref={phoneContainerRef}
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
@@ -283,7 +298,7 @@ function PhoneStudio({ companyName, brandData }) {
                     {/* Scene Container */}
                     <div className="flex-1 overflow-hidden relative z-10">
                         <AnimatePresence mode="wait">
-                            {scene === 'google' && <GoogleSearchScene key="google" companyName={companyName} brandData={brandData} />}
+                            {scene === 'google' && <GoogleSearchScene key="google" companyName={companyName} brandData={brandData} chatButtonRef={chatButtonRef} />}
                             {scene === 'rcs' && <RCSChatScene key="rcs" companyName={companyName} brandData={brandData} />}
                         </AnimatePresence>
 
@@ -300,9 +315,46 @@ function PhoneStudio({ companyName, brandData }) {
                             )}
                         </AnimatePresence>
 
-                        {/* Cursor Overlay */}
+                        {/* Cursor Overlay - Ref Based */}
                         <AnimatePresence>
-                            {cursorState !== 'hidden' && <CursorOverlay state={cursorState} />}
+                            {cursorState !== 'hidden' && (
+                                <motion.div
+                                    initial={{ top: '110%', left: '90%', opacity: 0 }}
+                                    animate={cursorState === 'moving' ? {
+                                        top: cursorTarget.y,
+                                        left: cursorTarget.x,
+                                        opacity: 1
+                                    } : {
+                                        top: '80%', // Waiting state
+                                        left: '80%',
+                                        opacity: 1
+                                    }}
+                                    transition={{
+                                        type: "spring", stiffness: 100, damping: 20
+                                    }}
+                                    onAnimationComplete={() => {
+                                        if (cursorState === 'moving') {
+                                            setIsClicking(true);
+                                            setTimeout(() => {
+                                                setIsClicking(false);
+                                                setScene('rcs');
+                                                setCursorState('hidden');
+                                            }, 200);
+                                        }
+                                    }}
+                                    className="absolute z-[60] pointer-events-none"
+                                    style={{ x: "-30%", y: "-10%" }} // Offset for pointer tip
+                                >
+                                    <motion.div animate={{ scale: isClicking ? 0.8 : 1 }}>
+                                        <div className="relative drop-shadow-2xl">
+                                            {isClicking && <div className="absolute -inset-4 bg-white/30 rounded-full animate-ping" />}
+                                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6 3L23 18.5L15 19.5L19.5 28L16.5 29.5L11.5 20.5L6 26V3Z" fill="black" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
+                                            </svg>
+                                        </div>
+                                    </motion.div>
+                                </motion.div>
+                            )}
                         </AnimatePresence>
                     </div>
 
@@ -315,39 +367,10 @@ function PhoneStudio({ companyName, brandData }) {
     );
 }
 
-function CursorOverlay({ state }) {
-    const isMoving = state === 'moving' || state === 'clicked';
-    const isClicked = state === 'clicked';
-
-    return (
-        <motion.div
-            initial={{ top: '110%', left: '90%', scale: 1, opacity: 0 }}
-            animate={{
-                top: isMoving ? '60%' : '80%', // 60% fits the "Chat" button better
-                left: isMoving ? '50%' : '80%',
-                scale: isClicked ? 0.9 : 1,
-                opacity: state === 'hidden' ? 0 : 1
-            }}
-            transition={{
-                type: "spring", stiffness: 120, damping: 20
-            }}
-            className="absolute z-[60] pointer-events-none"
-        >
-            {/* The Cursor SVG */}
-            <div className="relative drop-shadow-2xl">
-                {isClicked && <div className="absolute -inset-4 bg-white/30 rounded-full animate-ping" />}
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 3L23 18.5L15 19.5L19.5 28L16.5 29.5L11.5 20.5L6 26V3Z" fill="black" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
-                </svg>
-            </div>
-        </motion.div>
-    );
-}
-
 
 // --- SCENES ---
 
-function GoogleSearchScene({ companyName, brandData }) {
+function GoogleSearchScene({ companyName, brandData, chatButtonRef }) {
     const brandName = companyName || 'Your Brand';
     const brandUrl = brandName.toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
 
@@ -372,7 +395,7 @@ function GoogleSearchScene({ companyName, brandData }) {
                     <h2 className="text-xl font-normal text-[#1A73E8] mb-1 cursor-pointer hover:underline leading-snug">{brandName} - Official Site</h2>
                     <div className="text-sm text-[#4D5156] leading-relaxed mb-4 min-h-[40px]">{brandData.description || 'Loading brand description...'}</div>
                     <div className="space-y-0 mb-4 border-t border-[#F1F3F4]">{brandData.sitelinks.map((link, idx) => <ExpandableOption key={idx} text={link} />)}</div>
-                    <motion.button whileTap={{ scale: 0.95 }} className="w-full bg-white border border-[#DADCE0] rounded-lg py-3 px-4 flex items-center gap-3 hover:bg-[#F8F9FA] transition-colors shadow-sm mb-4 group relative overflow-hidden">
+                    <motion.button ref={chatButtonRef} whileTap={{ scale: 0.95 }} className="w-full bg-white border border-[#DADCE0] rounded-lg py-3 px-4 flex items-center gap-3 hover:bg-[#F8F9FA] transition-colors shadow-sm mb-4 group relative overflow-hidden">
                         <div className="w-9 h-9 rounded-full bg-[#1A73E8] flex items-center justify-center flex-shrink-0 z-10"><MessageCircle className="w-5 h-5 text-white" /></div>
                         <div className="flex-1 text-left z-10"><div className="text-sm font-medium text-[#202124]">Chat with {brandName}</div><div className="text-xs text-[#5F6368]">On Google Messages</div></div><ChevronRight className="w-5 h-5 text-[#5F6368] z-10" />
                     </motion.button>
