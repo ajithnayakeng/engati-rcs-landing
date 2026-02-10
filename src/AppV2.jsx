@@ -121,6 +121,19 @@ function AppV2() {
 
     const brandData = useBrandData(companyName);
 
+    // Inject Calendly Scripts
+    useEffect(() => {
+        const head = document.querySelector('head');
+        const script = document.createElement('script');
+        script.setAttribute('src', 'https://assets.calendly.com/assets/external/widget.js');
+        head.appendChild(script);
+
+        const style = document.createElement('link');
+        style.setAttribute('rel', 'stylesheet');
+        style.setAttribute('href', 'https://assets.calendly.com/assets/external/widget.css');
+        head.appendChild(style);
+    }, []);
+
     return (
         <div className="min-h-screen bg-[#F8F9FA] antialiased font-sans overflow-hidden relative flex flex-col">
 
@@ -581,55 +594,31 @@ function Page1({ companyName, setCompanyName, onNext }) {
 // FUTURE: Replace SCRIPT_URL with Salesforce Web-to-Lead endpoint
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7JxrZRuuXwpdNHtozxkvBnXWGeO7M-5i_TRaXJAIDN2FvEIllVodSXmIxIdj__NRW/exec";
 
-function Page2({ companyName, onBack, onSubmit }) {
-    const [form, setForm] = useState({ fullName: '', email: '', phone: '', revenue: '', date: '', time: '' });
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null);
+function Page2({ companyName, onBack }) {
+    const [form, setForm] = useState({ fullName: '', email: '', phone: '' });
 
-    // Close dropdown on outside click
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setDropdownOpen(false);
-            }
+    const handleCalendlyBooking = () => {
+        // 1. Basic Validation
+        if (!form.fullName || !form.email || !form.phone) {
+            alert("Please fill in your contact details first.");
+            return;
         }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-
-        const formData = {
-            companyName: companyName, // From props
-            fullName: form.fullName,
-            email: form.email,
-            phone: form.phone,
-            revenue: form.revenue,
-            date: form.date,
-            time: form.time
-        };
-
-        try {
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                // Using 'no-cors' allows us to send data without failing on CORS preflight.
-                // However, we won't get a response JSON back (opaque response). This is fine for simple fire-and-forget.
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
+        // 2. Open Calendly Popup
+        if (window.Calendly) {
+            window.Calendly.initPopupWidget({
+                url: 'https://calendly.com/demos-engati/google-rcs',
+                prefill: {
+                    name: form.fullName,
+                    email: form.email,
+                    customAnswers: {
+                        a1: form.phone
+                    }
+                }
             });
-
-            // Since we can't read the response in no-cors, assume success if network request completes.
-            onSubmit(formData); // Go to Page 3
-        } catch (error) {
-            console.error("Submission Error:", error);
-            alert("Something went wrong submitting your request. Please try again.");
-            setIsSubmitting(false);
+        } else {
+            // Fallback
+            window.open('https://calendly.com/demos-engati/google-rcs', '_blank');
         }
     };
 
@@ -643,7 +632,7 @@ function Page2({ companyName, onBack, onSubmit }) {
                 <p className="text-base text-[#666666] leading-relaxed">Leave your details below and someone from Engati team will get in touch with you, at your preferred time.</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                     <div>
                         <label className="text-sm font-medium text-[#000000] mb-1.5 block">Full Name</label>
@@ -678,84 +667,18 @@ function Page2({ companyName, onBack, onSubmit }) {
                     />
                 </div>
 
-                {/* CUSTOM SELECT: Annual Revenue */}
-                <CustomSelect
-                    label="Annual Revenue (INR)"
-                    value={form.revenue}
-                    placeholder="Approximate Annual Revenue"
-                    options={["< 50 Cr", "50 Cr - 100 Cr", "100 Cr - 500 Cr", "> 500 Cr"]}
-                    onChange={(val) => setForm({ ...form, revenue: val })}
-                />
-
-                {/* SCHEDULING GRID */}
-                <div>
-                    <label className="text-sm font-medium text-[#000000] mb-1.5 block">Preferred time to connect</label>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="relative group">
-                            <div className="w-full p-4 bg-white border border-gray-200 rounded-xl text-left flex items-center gap-3 text-[#000000] group-hover:border-[#BD2949] transition-colors overflow-hidden pointer-events-none shadow-sm">
-                                <Calendar className="w-5 h-5 text-[#BD2949] flex-shrink-0" />
-                                <span className={`text-sm font-medium truncate ${form.date ? 'text-black' : 'text-[#999999]'}`}>
-                                    {form.date ? new Date(form.date).toLocaleDateString() : 'Select date'}
-                                </span>
-                            </div>
-                            <input
-                                type="date"
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                value={form.date}
-                                onChange={(e) => setForm({ ...form, date: e.target.value })}
-                                required
-                                onClick={(e) => {
-                                    try {
-                                        e.target.showPicker();
-                                    } catch (error) {
-                                        // fallback for older browsers
-                                    }
-                                }}
-                            />
-                        </div>
-                        <div className="relative group">
-                            <div className="w-full p-4 bg-white border border-gray-200 rounded-xl text-left flex items-center gap-3 text-[#000000] group-hover:border-[#BD2949] transition-colors overflow-hidden pointer-events-none shadow-sm">
-                                <Clock className="w-5 h-5 text-[#BD2949] flex-shrink-0" />
-                                <span className={`text-sm font-medium truncate ${form.time ? 'text-black' : 'text-[#999999]'}`}>
-                                    {form.time || 'Select your preferred time'}
-                                </span>
-                            </div>
-                            <input
-                                type="time"
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                value={form.time}
-                                onChange={(e) => setForm({ ...form, time: e.target.value })}
-                                required
-                                onClick={(e) => {
-                                    try {
-                                        e.target.showPicker();
-                                    } catch (error) {
-                                        // fallback
-                                    }
-                                }}
-                            />
-                        </div>
-                    </div>
-                </div>
-
                 <div>
                     <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full py-4 bg-[#BD2949] text-white rounded-lg font-bold text-base hover:bg-[#A02340] disabled:bg-[#F1F3F4] disabled:text-[#999999] disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5 mt-4"
+                        type="button"
+                        onClick={handleCalendlyBooking}
+                        className="w-full py-4 bg-[#BD2949] hover:bg-[#a3223e] text-white rounded-xl font-semibold shadow-lg shadow-red-900/10 transition-all mt-6 flex items-center justify-center gap-2"
                     >
-                        {isSubmitting ? (
-                            <>
-                                <Loader2 className="w-5 h-5 animate-spin" />
-                                Processing Request...
-                            </>
-                        ) : (
-                            "Submit"
-                        )}
+                        <Calendar className="w-5 h-5" />
+                        Book Your Slot
                     </button>
                     <p className="text-xs text-gray-400 text-center mt-3">Someone from the team will get in touch with you</p>
                 </div>
-            </form>
+            </div>
         </motion.div >
     );
 }
